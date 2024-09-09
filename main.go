@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
+	"github.com/golang/protobuf/jsonpb"
 	"github.com/na0chan-go/protobuf-lesson/pb"
-	"google.golang.org/protobuf/proto"
 )
 
 func main() {
@@ -29,32 +28,49 @@ func main() {
 			Day:   18,
 		},
 	}
-	// バイナリデータに変換
-	binData, err := proto.Marshal(employee)
+
+	// // バイナリデータに変換
+	// binData, err := proto.Marshal(employee)
+	// if err != nil {
+	// 	log.Fatalln("Failed to encode employee:", err)
+	// }
+
+	// // バイナリデータをファイルに出力
+	// err = os.WriteFile("employee.bin", binData, 0644)
+	// if err != nil {
+	// 	log.Fatalln("Failed to write employee:", err)
+	// }
+
+	// // バイナリデータをファイルから読み込む
+	// in, err := os.ReadFile("employee.bin")
+	// if err != nil {
+	// 	log.Fatalln("Failed to read employee:", err)
+	// }
+
+	// // 空の構造体を作成
+	// readEmployee := &pb.Employee{}
+	// // バイナリデータをデコード
+	// err = proto.Unmarshal(in, readEmployee)
+	// if err != nil {
+	// 	log.Fatalln("Failed to decode employee:", err)
+	// }
+
+	// // デシリアライズしたデータを出力
+	// fmt.Println(readEmployee)
+
+	m := jsonpb.Marshaler{}
+	out, err := m.MarshalToString(employee)
 	if err != nil {
 		log.Fatalln("Failed to encode employee:", err)
 	}
 
-	// バイナリデータをファイルに出力
-	err = os.WriteFile("employee.bin", binData, 0644)
-	if err != nil {
-		log.Fatalln("Failed to write employee:", err)
-	}
+	// fmt.Println(out)
 
-	// バイナリデータをファイルから読み込む
-	in, err := os.ReadFile("employee.bin")
-	if err != nil {
-		log.Fatalln("Failed to read employee:", err)
-	}
-
-	// 空の構造体を作成
 	readEmployee := &pb.Employee{}
-	// バイナリデータをデコード
-	err = proto.Unmarshal(in, readEmployee)
+	err = jsonpb.UnmarshalString(out, readEmployee)
 	if err != nil {
 		log.Fatalln("Failed to decode employee:", err)
 	}
 
-	// デシリアライズしたデータを出力
 	fmt.Println(readEmployee)
 }
