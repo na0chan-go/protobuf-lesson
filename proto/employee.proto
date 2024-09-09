@@ -1,7 +1,9 @@
 syntax = "proto3";
 
-// パッケージを定義
 package employee;
+
+// go_package オプションを指定
+option go_package = "./pb";
 
 // パッケージをインポート
 import "proto/date.proto";
